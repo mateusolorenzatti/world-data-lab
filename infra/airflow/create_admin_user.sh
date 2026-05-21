@@ -1,0 +1,1 @@
+airflow users create --username admin --firstname Airflowzinho --lastname Jr --role Admin --email airlfowzinho@airflow.com --password airflow

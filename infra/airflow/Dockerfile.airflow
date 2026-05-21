@@ -1,0 +1,9 @@
+FROM apache/airflow
+
+USER root
+RUN python -m pip install --no-cache-dir apache-airflow-providers-postgres psycopg2-binary && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+USER airflow
+
+EXPOSE 8080
