@@ -12,6 +12,6 @@ Data home lab project, to test and learn different data resources, focusing on d
 Seasons of development:
  - [WDL-S1] -> Infraestructure and project structure
  - [WDL-S2] -> Batch ETL POC
- - [WDL-S3] -> Data Catalog Tool test and implmentation 
+ - [WDL-S3] -> Data Catalog Tool test and implementation 
 
 @author: mateusolorenzatti

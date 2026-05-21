@@ -18,13 +18,13 @@ services:
       retries: 10
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./infraestrucutre/database/init-databases.sh:/docker-entrypoint-initdb.d/init-databases.sh
+      - ./infra/database/init-databases.sh:/docker-entrypoint-initdb.d/init-databases.sh
     networks:
       - infra_network
 
   jupyter:
     build:
-      context: ./infraestrucutre/python
+      context: ./infra/python
       dockerfile: ./Dockerfile.jupyter
     container_name: jupyter
     env_file: .env
@@ -35,9 +35,7 @@ services:
       JUPYTER_TOKEN: ${JUPYTER_TOKEN}
       SPARK_OPTS: "--driver-memory 4g --executor-memory 4g"
     volumes:
-      - ./notebooks:/home/jovyan/work
-      - ./data:/home/jovyan/work/data
-      - ./src:/home/jovyan/work/src
+      - ./pipelines:/home/jovyan/work
     command: start-notebook.sh --NotebookApp.token=${JUPYTER_TOKEN} --NotebookApp.allow_origin='*'
     depends_on:
       - postgres
@@ -46,7 +44,7 @@ services:
 
   airflow-init:
     build:
-      context: ./infraestrucutre/airflow
+      context: ./infra/airflow
       dockerfile: ./Dockerfile.airflow
     container_name: airflow-init
     entrypoint: >
@@ -64,7 +62,7 @@ services:
 
   airflow-api-server:
     build:
-      context: ./infraestrucutre/airflow
+      context: ./infra/airflow
       dockerfile:  ./Dockerfile.airflow
     container_name: airflow-api-server
     command: api-server
@@ -86,13 +84,13 @@ services:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
       - ./airflow/plugins:/opt/airflow/plugins
-      - ./infraestrucutre/airflow:/opt/airflow/custom_scripts
+      - ./infra/airflow:/opt/airflow/custom_scripts
     networks:
       - infra_network
 
   airflow-scheduler:
     build:
-      context: ./infraestrucutre/airflow
+      context: ./infra/airflow
       dockerfile: ./Dockerfile.airflow
     container_name: airflow-scheduler
     command: scheduler
