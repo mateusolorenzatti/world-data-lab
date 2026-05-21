@@ -77,6 +77,8 @@ services:
       AIRFLOW__WEBSERVER__ENABLE_PROXY_FIX: "True"
       AIRFLOW__CORE__FERNET_KEY: "airflowfernetkey"
       AIRFLOW__CORE__AUTH_MANAGER: "airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager"
+      AIRFLOW__ADMIN_USER: ${AIRFLOW_USER}
+      AIRFLOW__ADMIN_PASSWORD: ${AIRFLOW_PASSWORD}
     depends_on:
       - airflow-init
       - postgres
@@ -84,6 +86,7 @@ services:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
       - ./airflow/plugins:/opt/airflow/plugins
+      - ./infraestrucutre/airflow:/opt/airflow/custom_scripts
     networks:
       - infra_network
 
