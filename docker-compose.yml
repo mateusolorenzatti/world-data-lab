@@ -34,6 +34,10 @@ services:
     environment:
       JUPYTER_TOKEN: ${JUPYTER_TOKEN}
       SPARK_OPTS: "--driver-memory 4g --executor-memory 4g"
+      POSTGRES_DB: ${WDL_DB}
+      POSTGRES_USER: ${WDL_USER}
+      POSTGRES_PASSWORD: ${WDL_PASSWORD}
+      POSTGRES_PORT: ${POSTGRES_PORT}
     volumes:
       - ./pipelines:/home/jovyan/work
     command: start-notebook.sh --NotebookApp.token=${JUPYTER_TOKEN} --NotebookApp.allow_origin='*'

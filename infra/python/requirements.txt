@@ -13,3 +13,4 @@ great_expectations
 protobuf
 contextily
 folium
+kagglehub
