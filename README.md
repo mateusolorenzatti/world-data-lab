@@ -7,6 +7,10 @@ __      _____  _ __| | __| |       __| | __ _| |_ __ _      | | __ _| |__
 ============================================================================
 ```
 
+<p align="center">
+  <img src="/doc/diagram.jpg" alt="wdl-arch" width="50%" height="50%"/>
+</p>
+
 Data home lab project, to test and learn different data resources, focusing on data engineering, analysis and machine learning.
 
 Seasons of development:
