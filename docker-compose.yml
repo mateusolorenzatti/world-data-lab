@@ -67,7 +67,7 @@ services:
   airflow-api-server:
     build:
       context: ./infra/airflow
-      dockerfile:  ./Dockerfile.airflow
+      dockerfile: ./Dockerfile.airflow
     container_name: airflow-api-server
     command: api-server
     ports:
@@ -79,18 +79,27 @@ services:
       AIRFLOW__WEBSERVER__ENABLE_PROXY_FIX: "True"
       AIRFLOW__CORE__FERNET_KEY: "airflowfernetkey"
       AIRFLOW__CORE__AUTH_MANAGER: "airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager"
-      AIRFLOW__ADMIN_USER: ${AIRFLOW_USER}
-      AIRFLOW__ADMIN_PASSWORD: ${AIRFLOW_PASSWORD}
+      AIRFLOW__WEBSERVER__SECRET_KEY: "seu_secret_key_muito_seguro_aqui"
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
     depends_on:
-      - airflow-init
-      - postgres
+      airflow-init:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
       - ./airflow/plugins:/opt/airflow/plugins
       - ./infra/airflow:/opt/airflow/custom_scripts
+      - ./pipelines:/opt/airflow/notebooks
     networks:
       - infra_network
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: always
 
   airflow-scheduler:
     build:
@@ -104,15 +113,23 @@ services:
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
       AIRFLOW__WEBSERVER__ENABLE_PROXY_FIX: "True"
       AIRFLOW__CORE__FERNET_KEY: "airflowfernetkey"
+      AIRFLOW__SCHEDULER__DAG_DIR_LIST_INTERVAL: "30"
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
+      AIRFLOW__SCHEDULER__MIN_FILE_PROCESS_INTERVAL: 10
     depends_on:
-      - airflow-api-server
-      - postgres
+      airflow-init:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
       - ./airflow/plugins:/opt/airflow/plugins
+      - ./infra/airflow:/opt/airflow/custom_scripts
+      - ./pipelines:/opt/airflow/notebooks
     networks:
       - infra_network
+    restart: always
 
 volumes:
   postgres_data:

@@ -6,4 +6,7 @@ RUN python -m pip install --no-cache-dir apache-airflow-providers-postgres psyco
 
 USER airflow
 
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
 EXPOSE 8080
