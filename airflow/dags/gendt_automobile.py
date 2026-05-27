@@ -1,6 +1,10 @@
 from airflow import DAG
-from airflow.providers.standard.operators.bash import BashOperator
+# from airflow.providers.standard.operators.bash import BashOperator
+from airflow.operators.bash import BashOperator
 from datetime import datetime
+
+def fun_teste():
+    print('Teste da DAG')
 
 with DAG(
     'GENDT_Automobile_Pipeline',
