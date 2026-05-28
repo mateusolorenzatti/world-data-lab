@@ -8,7 +8,7 @@ __      _____  _ __| | __| |       __| | __ _| |_ __ _      | | __ _| |__
 ```
 
 <p align="center">
-  <img src="/doc/diagram.jpg" alt="wdl-arch"/>
+  <img src="/doc/diagram.png" alt="wdl-arch"/>
 </p>
 
 Data home lab project, to test and learn different data resources, focusing on data engineering, analysis and machine learning.
