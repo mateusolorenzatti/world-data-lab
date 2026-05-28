@@ -1,0 +1,6 @@
+docker>=6.0.0
+papermill>=2.4.0
+nbconvert>=7.0.0
+jupyter>=1.0.0
+pandas>=2.0.0
+ipykernel

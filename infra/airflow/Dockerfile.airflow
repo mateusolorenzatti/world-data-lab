@@ -1,9 +1,28 @@
-FROM apache/airflow
-
+FROM apache/airflow:2.9.3-python3.11
+ 
 USER root
-RUN python -m pip install --no-cache-dir apache-airflow-providers-postgres psycopg2-binary && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
+ 
+# Instale Docker CLI e dependências
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    docker.io \
+    docker-buildx-plugin \
+    curl \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+ 
+# Instale providers e dependências do Airflow
+RUN python -m pip install --no-cache-dir \
+    apache-airflow-providers-postgres \
+    apache-airflow-providers-docker \
+    psycopg2-binary \
+    docker
+ 
+# Configure permissões para o usuário airflow acessar Docker
+RUN usermod -aG docker airflow
+ 
 USER airflow
-
+ 
+# Copie e instale requirements customizados
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+ 
 EXPOSE 8080
