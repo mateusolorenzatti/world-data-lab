@@ -13,4 +13,7 @@ great_expectations
 protobuf
 contextily
 folium
-kagglehub
+kaggle==1.6.17
+kagglesdk==0.1.22
+kagglehub==1.0.1
+papermill

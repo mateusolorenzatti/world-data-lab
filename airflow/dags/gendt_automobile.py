@@ -3,8 +3,10 @@ from airflow import DAG
 from airflow.operators.bash import BashOperator
 from datetime import datetime
 
-def fun_teste():
-    print('Teste da DAG')
+import sys, os
+sys.path.append(os.path.join(os.getcwd(), "/opt/airflow/operators"))
+from notebook_operator import NotebookOperator
+
 
 with DAG(
     'GENDT_Automobile_Pipeline',
@@ -14,40 +16,24 @@ with DAG(
     description="Pipeline completo: Bronze → Silver → Gold"
 ) as dag:
     
-    bronze_task = BashOperator(
+    bronze_task = NotebookOperator(
         task_id='bronze_ingestion',
-        bash_command="""
-        jupyter nbconvert --to notebook --execute \
-        --output /opt/airflow/logs/bronze_automobile_{{ds}}.ipynb \
-        /opt/airflow/notebooks/src/gendt/1_brz/brz_automobile.ipynb
-        """
+        notebook_path='gendt/1_brz/brz_automobile.ipynb' 
     )
     
-    silver_task = BashOperator(
+    silver_task = NotebookOperator(
         task_id='silver_transformation',
-        bash_command="""
-        jupyter nbconvert --to notebook --execute \
-        --output /opt/airflow/logs/silver_automobile_{{ds}}.ipynb \
-        /opt/airflow/notebooks/src/gendt/2_slv/slv_automobile.ipynb
-        """
+        notebook_path='gendt/2_svr/svr_automobile.ipynb' 
     )
     
-    gold_task_brand = BashOperator(
+    gold_task_brand = NotebookOperator(
         task_id='gold_aggregation_brand',
-        bash_command="""
-        jupyter nbconvert --to notebook --execute \
-        --output /opt/airflow/logs/gold_automobile_{{ds}}.ipynb \
-        /opt/airflow/notebooks/src/gendt/3_gld/gld_automobile_by_brand.ipynb
-        """
+        notebook_path='gendt/3_gld/gld_automobile_by_brand.ipynb' 
     )
     
-    gold_task_country = BashOperator(
+    gold_task_country = NotebookOperator(
         task_id='gold_aggregation_country',
-        bash_command="""
-        jupyter nbconvert --to notebook --execute \
-        --output /opt/airflow/logs/gold_automobile_{{ds}}.ipynb \
-        /opt/airflow/notebooks/src/gendt/3_gld/gld_automobile_by_country.ipynb
-        """
+        notebook_path='gendt/3_gld/gld_automobile_by_country.ipynb' 
     )
     
     bronze_task >> silver_task >> [gold_task_brand, gold_task_country]
